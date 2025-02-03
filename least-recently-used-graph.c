@@ -10,7 +10,7 @@
 
 #define TOTAL_MEM_PAGES 8
 #define TOTAL_FRAMES_PER_SECOND 1
-#define TOTAL_TIME 60
+#define TOTAL_TIME 120
 
 struct Page {
     int pageNumber;
