@@ -5,10 +5,10 @@
 #include <stdbool.h>
 #include <raylib.h>
 
-#define TOTAL_MEM_PAGES 8
 #define SCREEN_WIDTH  800
 #define SCREEN_HEIGHT 600
 
+#define TOTAL_MEM_PAGES 8
 #define TOTAL_FRAMES_PER_SECOND 1
 #define TOTAL_TIME 60
 
@@ -36,7 +36,7 @@ void drawMemoryBars(struct Memory* mem) {
     const int maxBarHeight = 400;
 
     for (int i = 0; i < mem->numEntries; i++) {
-        int barHeight = mem->entries[i]->useIndex * 10;
+        int barHeight = mem->entries[i]->useIndex * 25;
         if (barHeight > maxBarHeight) barHeight = maxBarHeight;
         
         int x = 20 + i * (barWidth + 20);
@@ -51,8 +51,8 @@ void drawMemoryBars(struct Memory* mem) {
     }
 }
 
-int randInt(int end) {
-    int num = rand() % end + 1;
+int randInt(int max) {
+    int num = rand() % max + 1;
     return num - 1;
 }
 
@@ -99,7 +99,7 @@ int main(void) {
     int simulationCounter = TOTAL_FRAMES_PER_SECOND;
     bool simulationRunning = true;
 
-    // Variável para armazenar a mensagem de substituição
+    //Variável para armazenar a mensagem de substituição
     char substitutionMessage[50] = "";
     int substitutionMessageTimer = 0;
 
@@ -110,29 +110,29 @@ int main(void) {
 
     while (!WindowShouldClose()) {
         if (simulationRunning && simulationCounter % TOTAL_FRAMES_PER_SECOND == 0) {
-            // Escolhe uma página aleatória
+            //Escolhe uma página aleatória
             int pageNum = rand() % (TOTAL_MEM_PAGES * 2);
             struct Page* page = pages[pageNum];
             printf("Página escolhida: %d\n", page->pageNumber);
 
-            // Atualiza o tempo de uso das páginas na memória
+            //Atualiza o tempo de uso das páginas na memória
             for (int j = 0; j < memory->numEntries; j++) {
                 memory->entries[j]->useIndex++;
             }
 
-            // Verifica se a página já está na memória
+            //Verifica se a página já está na memória
             page->useIndex = 0;
             if (isPageInMemory(page, memory)) {
                 printf("Página estava na memória. Sem Swap.\n");
             } else {
                 printf("Página não estava na memória...\n");
 
-                // Se ainda há espaço na memória, adiciona a página
+                //Se ainda há espaço na memória, adiciona a página
                 if (memory->numEntries < TOTAL_MEM_PAGES) {
                     memory->entries[memory->numEntries] = page;
                     memory->numEntries++;
                 } else {
-                    // Acha a página LRU
+                    //Acha a página mais tempo sem uso
                     struct Page* leastRecentlyUsedPage = memory->entries[0];
                     for (int j = 1; j < memory->numEntries; j++) {
                         if (memory->entries[j]->useIndex > leastRecentlyUsedPage->useIndex) {
@@ -141,10 +141,11 @@ int main(void) {
                     }
                     printf("Página a mais tempo sem uso: %d\n", leastRecentlyUsedPage->pageNumber);
 
+                    //Substitui essa página pela página que vai entrar 
                     for (int j = 0; j < memory->numEntries; j++) {
                         if (memory->entries[j]->pageNumber == leastRecentlyUsedPage->pageNumber) {
                             snprintf(substitutionMessage, sizeof(substitutionMessage), "Substituição: %d->%d", leastRecentlyUsedPage->pageNumber, page->pageNumber);
-                            // Exibe a mensagem por 1 segundo (60 frames)
+                            //exibe a mensagem no mesmo frame que ela foi substituída
                             substitutionMessageTimer = TOTAL_FRAMES_PER_SECOND;
 
                             memory->entries[j] = page;
@@ -171,7 +172,7 @@ int main(void) {
         DrawText(TextFormat("Faltas de Pagina: %d", totalPageFaults), 10, 10, 20, DARKGRAY);
         DrawText(TextFormat("Tempo: %d/%d", currentTime, TOTAL_TIME), 10, 40, 20, DARKGRAY);
 
-        // Exibe a mensagem de substituição, se houver
+        //Exibe a mensagem de substituição se ela existir
         if (substitutionMessageTimer > 0) {
             DrawText(substitutionMessage, SCREEN_WIDTH / 2 - MeasureText(substitutionMessage, 20) / 2, 50, 20, RED);
             substitutionMessageTimer--;
