@@ -88,7 +88,7 @@ bool isPageInMemory(struct Page* page, struct Memory* mem) {
 int main(void) {
     srand(time(NULL));
 
-    struct Page** pages = generatePages(TOTAL_MEM_PAGES * 2);
+    struct Page** pages = generatePages(TOTAL_MEM_PAGES * 3);
     struct Page** memoryPages = malloc(TOTAL_MEM_PAGES * sizeof(struct Page*));
 
     struct Memory* memory = (struct Memory*)malloc(sizeof(struct Memory));
@@ -111,7 +111,7 @@ int main(void) {
     while (!WindowShouldClose()) {
         if (simulationRunning && simulationCounter % TOTAL_FRAMES_PER_SECOND == 0) {
             //Escolhe uma página aleatória
-            int pageNum = rand() % (TOTAL_MEM_PAGES * 2);
+            int pageNum = randInt(TOTAL_MEM_PAGES * 3);
             struct Page* page = pages[pageNum];
             printf("Página escolhida: %d\n", page->pageNumber);
 
@@ -178,7 +178,7 @@ int main(void) {
     }
 
     // Liberação de memória
-    for (int i = 0; i < TOTAL_MEM_PAGES * 2; i++) {
+    for (int i = 0; i < TOTAL_MEM_PAGES * 3; i++) {
         free(pages[i]);
     }
     free(memory);

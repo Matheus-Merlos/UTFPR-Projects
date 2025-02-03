@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#define TOTAL_MEM_PAGES 8
+#define TOTAL_MEM_PAGES 4
 
 struct Page {
     int pageNumber;
@@ -53,7 +53,7 @@ bool isPageInMemory(struct Page* page, struct Memory* mem) {
 int main(void) {
     srand(time(NULL));
     
-    struct Page** pages = generatePages(TOTAL_MEM_PAGES * 2);
+    struct Page** pages = generatePages(TOTAL_MEM_PAGES * 3);
 
     struct Page** memoryPages = malloc(TOTAL_MEM_PAGES * sizeof(struct Page*));
 
