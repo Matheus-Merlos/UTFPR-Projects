@@ -74,13 +74,9 @@ int main(void) {
             memory->entries[j]->useIndex++;
         }
 
-        if(isPageInMemory(page, memory)) {
-            page->useIndex = 0;
-            printf("Página estava na memória. Sem Swap.\n");
-        }
-        else {
+        page->useIndex = 0;
+        if(!isPageInMemory(page, memory)) {
             printf("Página não estava na memória...\n");
-            page->useIndex = 0;
             sleep(1);
 
             //Se tem algum espaço livre na memória ainda...

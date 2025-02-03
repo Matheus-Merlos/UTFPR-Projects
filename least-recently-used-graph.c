@@ -122,11 +122,7 @@ int main(void) {
 
             //Verifica se a página já está na memória
             page->useIndex = 0;
-            if (isPageInMemory(page, memory)) {
-                printf("Página estava na memória. Sem Swap.\n");
-            } else {
-                printf("Página não estava na memória...\n");
-
+            if (!isPageInMemory(page, memory)) {
                 //Se ainda há espaço na memória, adiciona a página
                 if (memory->numEntries < TOTAL_MEM_PAGES) {
                     memory->entries[memory->numEntries] = page;
