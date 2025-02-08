@@ -74,7 +74,7 @@ int main(void) {
     double lastUpdateTime = GetTime();
 
     while (!WindowShouldClose()) {
-        if ((GetTime() - lastUpdateTime) >= 1.0 && currentTimeStep < TOTAL_TIME) {
+        if ((GetTime() - lastUpdateTime) >= 0.15 && currentTimeStep < TOTAL_TIME) {
             int sortedQueue[QUEUE_SIZE];
             sortQueue(queue, sortedQueue);
             
