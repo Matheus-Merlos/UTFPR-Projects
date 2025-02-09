@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -7,10 +6,10 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 16
 
-#define NUM_CONSUMERS 2
-#define NUM_PRODUCERS 2
+#define NUM_CONSUMERS 7
+#define NUM_PRODUCERS 4
 
 
 /*
@@ -70,7 +69,7 @@ Produtores e consumidores
 
 void *producer(void *arg) {
     int numProducer = *(int*)arg;
-    while(true) {
+    while(1) {
         int item = rand() % 10;
 
         sem_wait(&empty);
@@ -90,7 +89,7 @@ void *producer(void *arg) {
 
 void *consumer(void *arg) {
     int numConsumer = *(int*)arg;
-    while(true) {
+    while(1) {
         sleep(1);
         sem_wait(&full);
         pthread_mutex_lock(&mutex);

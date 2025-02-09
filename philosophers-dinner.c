@@ -2,30 +2,11 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#include <signal.h>
 #include <stdlib.h>
 
 #define NUM_PHILOSOPHERS 5
 
 pthread_mutex_t forks[NUM_PHILOSOPHERS];
-
-void sigint_handler(int signum) {
-    (void)signum;
-    printf("\nExcluindo mutexes antes de sair...\n");
-    for(int i = 0; i < NUM_PHILOSOPHERS; i++) {
-        pthread_mutex_destroy(&forks[i]);
-        printf("Mutex %d destruído.\n", i);
-    }
-    exit(0);
-}
-
-__attribute__((constructor))
-void init_forks() {
-    signal(SIGINT, sigint_handler);
-    for(int i = 0; i < NUM_PHILOSOPHERS; i++) {
-        pthread_mutex_init(&forks[i], NULL);
-    }
-}
 
 void think(int philosopher) {
     printf("Philosopher %d is thinking...\n", philosopher + 1);
@@ -83,4 +64,21 @@ int main() {
     }
 
     return 0;
+}
+
+void cleanup() {
+    printf("\nExcluindo mutexes antes de sair...\n");
+    for(int i = 0; i < NUM_PHILOSOPHERS; i++) {
+        pthread_mutex_destroy(&forks[i]);
+        printf("Mutex %d destruído.\n", i);
+    }
+    exit(0);
+}
+
+__attribute__((constructor))
+void init_forks() {
+    atexit(cleanup);
+    for(int i = 0; i < NUM_PHILOSOPHERS; i++) {
+        pthread_mutex_init(&forks[i], NULL);
+    }
 }
